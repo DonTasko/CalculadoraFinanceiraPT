@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="Calculadora Financeira PT — Todas as contas financeiras que precisa, numa só aplicação." />
+  <title>Calculadora Financeira PT</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============ ONBOARDING ============ -->
+  <div id="screen-onboarding" class="screen onboarding">
+    <div class="onb-slides">
+      <div class="onb-slide active" data-step="1">
+        <div class="onb-icon">📊</div>
+        <h1>Calcula melhor.<br>Decide melhor.</h1>
+        <p>Todas as contas financeiras que precisa, numa só aplicação.</p>
+      </div>
+      <div class="onb-slide" data-step="2">
+        <div class="onb-icon">💶</div>
+        <h1>Salário, IVA, crédito, investimentos e muito mais.</h1>
+        <p>Calculadoras pensadas para Portugal.</p>
+      </div>
+      <div class="onb-slide" data-step="3">
+        <div class="onb-icon">🏠</div>
+        <h1>Tudo num só lugar.</h1>
+        <p>Rápido, simples e offline.</p>
+      </div>
+    </div>
+    <div class="onb-dots">
+      <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+    </div>
+    <button id="btn-onb-next" class="btn btn-primary btn-block">Seguinte</button>
+  </div>
+
+  <!-- ============ APP SHELL ============ -->
+  <div id="app" class="app hidden">
+    <header class="app-header">
+      <button id="btn-back" class="icon-btn hidden" aria-label="Voltar">←</button>
+      <h1 id="page-title" class="page-title">Calculadora Financeira PT</h1>
+      <button id="btn-theme" class="icon-btn" aria-label="Tema">☀️</button>
+    </header>
+
+    <main id="main" class="main">
+
+      <!-- HOME -->
+      <section id="screen-home" class="screen active">
+        <p class="subtitle">Escolha uma calculadora</p>
+        <div class="search-wrap">
+          <input id="search-home" type="search" placeholder="O que quer calcular?" autocomplete="off" />
+        </div>
+
+        <div id="favorites-home" class="favorites-home hidden">
+          <h2 class="section-title">⭐ As minhas calculadoras</h2>
+          <div id="fav-grid" class="grid grid-2"></div>
+        </div>
+
+        <h2 class="section-title">Categorias</h2>
+        <div id="home-grid" class="grid grid-2"></div>
+
+        <div class="ad-slot" data-ad="banner-bottom"></div>
+      </section>
+
+      <!-- LISTA DE TODAS AS CALCULADORAS -->
+      <section id="screen-calculators" class="screen">
+        <div class="search-wrap">
+          <input id="search-all" type="search" placeholder="Pesquisar calculadora..." autocomplete="off" />
+        </div>
+        <div id="all-grid" class="grid grid-2"></div>
+      </section>
+
+      <!-- HISTÓRICO -->
+      <section id="screen-history" class="screen">
+        <div class="row-between">
+          <p class="subtitle">Últimas operações</p>
+          <button id="btn-clear-history" class="btn btn-ghost btn-sm">Limpar</button>
+        </div>
+        <ul id="history-list" class="list"></ul>
+        <p id="history-empty" class="empty hidden">Ainda não há cálculos guardados.</p>
+      </section>
+
+      <!-- FAVORITOS -->
+      <section id="screen-favorites" class="screen">
+        <p class="subtitle">As suas calculadoras favoritas</p>
+        <div id="fav-full-grid" class="grid grid-2"></div>
+        <p id="fav-empty" class="empty hidden">Sem favoritos. Toque na estrela ⭐ numa calculadora.</p>
+      </section>
+
+      <!-- DEFINIÇÕES -->
+      <section id="screen-settings" class="screen">
+        <ul class="menu">
+          <li><button data-nav="privacy">Política de Privacidade</button></li>
+          <li><button data-nav="about">Sobre</button></li>
+          <li><button data-nav="contact">Contacto</button></li>
+          <li><button id="btn-toggle-theme">Alternar tema claro/escuro</button></li>
+          <li class="muted small">Versão 1.0.0</li>
+        </ul>
+      </section>
+
+      <!-- PÁGINAS INFO -->
+      <section id="screen-privacy" class="screen">
+        <h2>Política de Privacidade</h2>
+        <p>A <strong>Calculadora Financeira PT</strong> não recolhe dados pessoais. Não pedimos email, nome ou telefone.</p>
+        <p>Todos os cálculos e o histórico são guardados apenas no seu dispositivo (localStorage).</p>
+        <p>Funcionalidades futuras de publicidade (AdMob) podem enviar dados anonimizados para a Google, conforme a política da Google Play.</p>
+        <p>A aplicação funciona offline. A internet só é necessária para carregar anúncios, quando ativados.</p>
+      </section>
+
+      <section id="screen-about" class="screen">
+        <h2>Sobre</h2>
+        <p><strong>Calculadora Financeira PT</strong> é uma aplicação de utilidade diária para utilizadores em Portugal.</p>
+        <p>Reúne as principais calculadoras financeiras num único local, com interface simples e rápida.</p>
+        <p class="muted small">Os valores apresentados são estimativas e não constituem aconselhamento financeiro ou fiscal.</p>
+      </section>
+
+      <section id="screen-contact" class="screen">
+        <h2>Contacto</h2>
+        <p>Sugestões, erros ou ideias? Envie um email para:</p>
+        <p><a href="mailto:contacto@calculadorafinanc.pt">contacto@calculadorafinanc.pt</a></p>
+      </section>
+
+      <!-- ===================== CALCULADORAS ===================== -->
+
+      <!-- SALÁRIO LÍQUIDO -->
+      <section id="screen-salary" class="screen calc">
+        <h2>💶 Salário líquido</h2>
+        <p class="desc">Estimativa do salário líquido em Portugal.</p>
+        <div class="form">
+          <label>Salário bruto mensal (€)
+            <input id="sal-gross" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Ex: 1500" />
+          </label>
+          <label>Número de pagamentos por ano
+            <select id="sal-payments">
+              <option value="14">14 (com subsídios)</option>
+              <option value="12">12 (sem subsídios)</option>
+            </select>
+          </label>
+          <label>Região
+            <select id="sal-region">
+              <option value="continente">Continente</option>
+              <option value="acores">Açores</option>
+              <option value="madeira">Madeira</option>
+            </select>
+          </label>
+          <label>Estado civil
+            <select id="sal-marital">
+              <option value="solteiro">Solteiro(a)</option>
+              <option value="casado1">Casado(a) — 1 titular</option>
+              <option value="casado2">Casado(a) — 2 titulares</option>
+            </select>
+          </label>
+          <label>Número de dependentes
+            <input id="sal-deps" type="number" inputmode="numeric" min="0" value="0" />
+          </label>
+          <label>Subsídio de alimentação (€/dia)
+            <input id="sal-meal" type="number" inputmode="decimal" step="0.01" min="0" value="6" />
+          </label>
+          <label>Tipo de subsídio de alimentação
+            <select id="sal-meal-type">
+              <option value="dinheiro">Dinheiro (limite isento: 6,00 €)</option>
+              <option value="cartao">Cartão/refeição (limite isento: 9,60 €)</option>
+            </select>
+          </label>
+          <label>Dias trabalhados por mês
+            <input id="sal-days" type="number" inputmode="numeric" min="0" max="31" value="22" />
+          </label>
+          <label>Outros rendimentos anuais (€)
+            <input id="sal-other" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="salary">CALCULAR</button>
+
+        <div id="salary-result" class="result hidden">
+          <div class="result-card primary"><span>Salário bruto mensal</span><strong id="r-sal-gross">—</strong></div>
+          <div class="result-card"><span>Segurança Social (11%)</span><strong id="r-sal-ss">—</strong></div>
+          <div class="result-card"><span>IRS estimado (mensal)</span><strong id="r-sal-irs">—</strong></div>
+          <div class="result-card"><span>Subsídio de alimentação líquido</span><strong id="r-sal-meal">—</strong></div>
+          <div class="result-card primary"><span>Salário líquido mensal</span><strong id="r-sal-net">—</strong></div>
+          <div class="details">
+            <p>Taxa efetiva de IRS: <strong id="r-sal-irs-rate">—</strong></p>
+            <p>Desconto total mensal: <strong id="r-sal-disc">—</strong></p>
+            <p class="muted small">Valor estimado. As tabelas fiscais podem sofrer alterações. Confirme os valores oficiais antes de tomar decisões financeiras.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- IVA -->
+      <section id="screen-iva" class="screen calc">
+        <h2>🧾 IVA</h2>
+        <p class="desc">Calcular IVA em Portugal.</p>
+        <div class="form">
+          <label>Modo
+            <select id="iva-mode">
+              <option value="add">Preço sem IVA → com IVA</option>
+              <option value="remove">Preço com IVA → sem IVA</option>
+            </select>
+          </label>
+          <label>Taxa de IVA
+            <select id="iva-rate">
+              <option value="23">23% (normal)</option>
+              <option value="13">13% (intermédio)</option>
+              <option value="6">6% (reduzido)</option>
+              <option value="custom">Personalizado</option>
+            </select>
+          </label>
+          <label id="iva-custom-wrap" class="hidden">Taxa personalizada (%)
+            <input id="iva-custom" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Valor (€)
+            <input id="iva-value" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="iva">CALCULAR</button>
+        <div id="iva-result" class="result hidden">
+          <div class="result-card"><span>Base</span><strong id="r-iva-base">—</strong></div>
+          <div class="result-card"><span>IVA</span><strong id="r-iva-vat">—</strong></div>
+          <div class="result-card primary"><span>Total</span><strong id="r-iva-total">—</strong></div>
+        </div>
+      </section>
+
+      <!-- DESCONTOS -->
+      <section id="screen-discount" class="screen calc">
+        <h2>📉 Descontos</h2>
+        <p class="desc">Um ou vários descontos sucessivos.</p>
+        <div class="form">
+          <label>Preço original (€)
+            <input id="disc-price" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Descontos (%) — separados por vírgula
+            <input id="disc-values" type="text" inputmode="decimal" placeholder="Ex: 10, 20, 5" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="discount">CALCULAR</button>
+        <div id="disc-result" class="result hidden">
+          <div class="result-card"><span>Preço original</span><strong id="r-disc-orig">—</strong></div>
+          <div class="result-card"><span>Poupança total</span><strong id="r-disc-save">—</strong></div>
+          <div class="result-card primary"><span>Preço final</span><strong id="r-disc-final">—</strong></div>
+          <div class="details">
+            <p>Desconto efetivo total: <strong id="r-disc-pct">—</strong></p>
+            <ol id="r-disc-steps" class="steps"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- MARGEM & LUCRO -->
+      <section id="screen-margin" class="screen calc">
+        <h2>📊 Margem & Lucro</h2>
+        <p class="desc">Margem, markup e preços de venda.</p>
+        <div class="form">
+          <label>Modo
+            <select id="mrg-mode">
+              <option value="a">Compra + Venda → Lucro, Margem, Markup</option>
+              <option value="b">Compra + Margem → Preço de venda</option>
+              <option value="c">Venda + Margem → Preço máximo de compra</option>
+            </select>
+          </label>
+          <label id="mrg-buy-wrap">Preço de compra (€)
+            <input id="mrg-buy" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label id="mrg-sell-wrap">Preço de venda (€)
+            <input id="mrg-sell" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label id="mrg-pct-wrap">Margem pretendida (%)
+            <input id="mrg-pct" type="number" inputmode="decimal" step="0.01" min="0" max="99.99" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="margin">CALCULAR</button>
+        <div id="mrg-result" class="result hidden">
+          <div class="result-card"><span>Preço de compra</span><strong id="r-mrg-buy">—</strong></div>
+          <div class="result-card"><span>Preço de venda</span><strong id="r-mrg-sell">—</strong></div>
+          <div class="result-card"><span>Lucro</span><strong id="r-mrg-profit">—</strong></div>
+          <div class="result-card"><span>Margem</span><strong id="r-mrg-margin">—</strong></div>
+          <div class="result-card"><span>Markup</span><strong id="r-mrg-markup">—</strong></div>
+          <div class="result-card"><span>Multiplicador</span><strong id="r-mrg-mult">—</strong></div>
+          <div class="details">
+            <p class="muted small">Margem = lucro / preço de venda. Markup = lucro / preço de compra. São conceitos diferentes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERCENTAGENS -->
+      <section id="screen-percent" class="screen calc">
+        <h2>➗ Percentagens</h2>
+        <p class="desc">Vários modos de cálculo percentual.</p>
+        <div class="form">
+          <label>Modo
+            <select id="pct-mode">
+              <option value="of">Quanto é X% de Y?</option>
+              <option value="is">X representa que % de Y?</option>
+              <option value="up">Aumento percentual (de A para B)</option>
+              <option value="down">Redução percentual (de A para B)</option>
+              <option value="diff">Diferença percentual entre A e B</option>
+            </select>
+          </label>
+          <label id="pct-x-wrap">X (%)
+            <input id="pct-x" type="number" inputmode="decimal" step="0.01" />
+          </label>
+          <label id="pct-y-wrap">Y
+            <input id="pct-y" type="number" inputmode="decimal" step="0.01" />
+          </label>
+          <label id="pct-a-wrap" class="hidden">Valor A
+            <input id="pct-a" type="number" inputmode="decimal" step="0.01" />
+          </label>
+          <label id="pct-b-wrap" class="hidden">Valor B
+            <input id="pct-b" type="number" inputmode="decimal" step="0.01" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="percent">CALCULAR</button>
+        <div id="pct-result" class="result hidden">
+          <div class="result-card primary"><span>Resultado</span><strong id="r-pct-val">—</strong></div>
+          <div class="details"><p id="r-pct-expl">—</p></div>
+        </div>
+      </section>
+
+      <!-- JUROS SIMPLES -->
+      <section id="screen-simple-interest" class="screen calc">
+        <h2>💹 Juros simples</h2>
+        <p class="desc">J = C × i × t</p>
+        <div class="form">
+          <label>Capital inicial (€)
+            <input id="si-c" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Taxa de juro (%)
+            <input id="si-i" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Período
+            <input id="si-t" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Unidade
+            <select id="si-u">
+              <option value="anos">Anos</option>
+              <option value="meses">Meses</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="simple-interest">CALCULAR</button>
+        <div id="si-result" class="result hidden">
+          <div class="result-card"><span>Juros</span><strong id="r-si-j">—</strong></div>
+          <div class="result-card primary"><span>Capital final</span><strong id="r-si-f">—</strong></div>
+        </div>
+      </section>
+
+      <!-- JUROS COMPOSTOS -->
+      <section id="screen-compound-interest" class="screen calc">
+        <h2>📈 Juros compostos</h2>
+        <p class="desc">Com aportes periódicos e gráfico de evolução.</p>
+        <div class="form">
+          <label>Capital inicial (€)
+            <input id="ci-c0" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+          <label>Aporte periódico (€)
+            <input id="ci-pmt" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+          <label>Taxa anual (%)
+            <input id="ci-r" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Prazo
+            <input id="ci-t" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Unidade do prazo
+            <select id="ci-u">
+              <option value="anos">Anos</option>
+              <option value="meses">Meses</option>
+            </select>
+          </label>
+          <label>Frequência de capitalização
+            <select id="ci-f">
+              <option value="12">Mensal</option>
+              <option value="4">Trimestral</option>
+              <option value="2">Semestral</option>
+              <option value="1">Anual</option>
+            </select>
+          </label>
+          <label>Frequência do aporte
+            <select id="ci-pmt-freq">
+              <option value="mensal">Mensal</option>
+              <option value="trimestral">Trimestral</option>
+              <option value="semestral">Semestral</option>
+              <option value="anual">Anual</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="compound-interest">CALCULAR</button>
+        <div id="ci-result" class="result hidden">
+          <div class="result-card"><span>Capital investido</span><strong id="r-ci-invested">—</strong></div>
+          <div class="result-card"><span>Juros ganhos</span><strong id="r-ci-interest">—</strong></div>
+          <div class="result-card primary"><span>Valor final</span><strong id="r-ci-final">—</strong></div>
+          <div class="chart-wrap">
+            <canvas id="ci-chart" width="600" height="260"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- CRÉDITO -->
+      <section id="screen-credit" class="screen calc">
+        <h2>🏦 Crédito</h2>
+        <p class="desc">Prestação, juros e tabela de amortização.</p>
+        <div class="form">
+          <label>Montante (€)
+            <input id="cr-amt" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Prazo
+            <input id="cr-n" type="number" inputmode="numeric" min="1" />
+          </label>
+          <label>Unidade do prazo
+            <select id="cr-n-u">
+              <option value="meses">Meses</option>
+              <option value="anos">Anos</option>
+            </select>
+          </label>
+          <label>Taxa anual (%)
+            <input id="cr-r" type="number" inputmode="decimal" step="0.001" min="0" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="credit">CALCULAR</button>
+        <div id="cr-result" class="result hidden">
+          <div class="result-card primary"><span>Prestação</span><strong id="r-cr-pmt">—</strong></div>
+          <div class="result-card"><span>Total pago</span><strong id="r-cr-total">—</strong></div>
+          <div class="result-card"><span>Total de juros</span><strong id="r-cr-int">—</strong></div>
+          <button id="btn-cr-amort" class="btn btn-ghost btn-block">Mostrar amortização completa</button>
+          <div id="cr-amort-wrap" class="hidden">
+            <div class="table-wrap">
+              <table id="cr-amort-table">
+                <thead>
+                  <tr><th>#</th><th>Prestação</th><th>Capital</th><th>Juros</th><th>Dívida</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CRÉDITO HABITAÇÃO -->
+      <section id="screen-mortgage" class="screen calc">
+        <h2>🏠 Crédito habitação</h2>
+        <p class="desc">Prestação estimada para compra de casa.</p>
+        <div class="form">
+          <label>Preço do imóvel (€)
+            <input id="mt-price" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Entrada (€)
+            <input id="mt-down" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+          <label>Prazo (anos)
+            <input id="mt-years" type="number" inputmode="numeric" min="1" value="30" />
+          </label>
+          <label>Taxa anual (%)
+            <input id="mt-rate" type="number" inputmode="decimal" step="0.001" min="0" />
+          </label>
+          <label>Tipo de taxa
+            <select id="mt-type">
+              <option value="fixa">Fixa</option>
+              <option value="variavel">Variável</option>
+              <option value="mista">Mista</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="mortgage">CALCULAR</button>
+        <div id="mt-result" class="result hidden">
+          <div class="result-card"><span>Montante financiado</span><strong id="r-mt-fin">—</strong></div>
+          <div class="result-card primary"><span>Prestação estimada</span><strong id="r-mt-pmt">—</strong></div>
+          <div class="result-card"><span>Total de juros</span><strong id="r-mt-int">—</strong></div>
+          <div class="result-card"><span>Total pago</span><strong id="r-mt-total">—</strong></div>
+          <div class="details">
+            <p class="muted small">Valor estimado. As condições reais dependem do banco e do perfil do cliente.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAXA DE ESFORÇO -->
+      <section id="screen-effort-rate" class="screen calc">
+        <h2>📐 Taxa de esforço</h2>
+        <p class="desc">Quanto do seu rendimento vai para prestações.</p>
+        <div class="form">
+          <label>Rendimento líquido mensal (€)
+            <input id="er-income" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Prestação mensal (€)
+            <input id="er-pmt" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="effort-rate">CALCULAR</button>
+        <div id="er-result" class="result hidden">
+          <div class="result-card primary"><span>Taxa de esforço</span><strong id="r-er-pct">—</strong></div>
+          <div class="result-card"><span>Interpretação</span><strong id="r-er-label">—</strong></div>
+          <div class="details">
+            <p class="muted small">Intervalos apenas indicativos. Até 30% confortável · 30–40% atenção · 40–50% elevada · acima de 50% muito elevada.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVESTIMENTO -->
+      <section id="screen-investment" class="screen calc">
+        <h2>💰 Investimento</h2>
+        <p class="desc">Simule o crescimento do seu capital.</p>
+        <div class="form">
+          <label>Modo
+            <select id="inv-mode">
+              <option value="grow">Quanto terei no futuro?</option>
+              <option value="target">Quanto preciso investir por mês?</option>
+            </select>
+          </label>
+          <label>Capital inicial (€)
+            <input id="inv-c0" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+          <label id="inv-pmt-wrap">Investimento mensal (€)
+            <input id="inv-pmt" type="number" inputmode="decimal" step="0.01" min="0" value="0" />
+          </label>
+          <label id="inv-target-wrap" class="hidden">Objetivo (€)
+            <input id="inv-target" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Rentabilidade anual (%)
+            <input id="inv-r" type="number" inputmode="decimal" step="0.01" min="0" />
+          </label>
+          <label>Número de anos
+            <input id="inv-y" type="number" inputmode="numeric" min="1" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="investment">CALCULAR</button>
+        <div id="inv-result" class="result hidden">
+          <div class="result-card"><span>Capital investido</span><strong id="r-inv-in">—</strong></div>
+          <div class="result-card"><span>Ganhos</span><strong id="r-inv-gain">—</strong></div>
+          <div class="result-card primary"><span id="r-inv-final-label">Valor final</span><strong id="r-inv-final">—</strong></div>
+          <div class="chart-wrap">
+            <canvas id="inv-chart" width="600" height="260"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- REGRA DE TRÊS -->
+      <section id="screen-rule-of-three" class="screen calc">
+        <h2>🔢 Regra de três</h2>
+        <p class="desc">A : B = C : X</p>
+        <div class="form">
+          <label>A
+            <input id="r3-a" type="number" inputmode="decimal" step="0.01" />
+          </label>
+          <label>B
+            <input id="r3-b" type="number" inputmode="decimal" step="0.01" />
+          </label>
+          <label>C
+            <input id="r3-c" type="number" inputmode="decimal" step="0.01" />
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block" data-calc="rule-of-three">CALCULAR</button>
+        <div id="r3-result" class="result hidden">
+          <div class="result-card primary"><span>X</span><strong id="r-r3-x">—</strong></div>
+          <div class="details"><p id="r-r3-expl">—</p></div>
+        </div>
+      </section>
+
+      <!-- CALCULADORA GERAL -->
+      <section id="screen-calculator-general" class="screen calc">
+        <h2>🧮 Calculadora geral</h2>
+        <div class="calc-display" id="calc-display">0</div>
+        <div class="calc-pad">
+          <button data-k="(" class="k">(</button>
+          <button data-k=")" class="k">)</button>
+          <button data-k="clear" class="k danger">AC</button>
+          <button data-k="del" class="k danger">DEL</button>
+
+          <button data-k="7" class="k">7</button>
+          <button data-k="8" class="k">8</button>
+          <button data-k="9" class="k">9</button>
+          <button data-k="/" class="k op">÷</button>
+
+          <button data-k="4" class="k">4</button>
+          <button data-k="5" class="k">5</button>
+          <button data-k="6" class="k">6</button>
+          <button data-k="*" class="k op">×</button>
+
+          <button data-k="1" class="k">1</button>
+          <button data-k="2" class="k">2</button>
+          <button data-k="3" class="k">3</button>
+          <button data-k="-" class="k op">−</button>
+
+          <button data-k="0" class="k">0</button>
+          <button data-k="." class="k">,</button>
+          <button data-k="%" class="k op">%</button>
+          <button data-k="+" class="k op">+</button>
+
+          <button data-k="=" class="k equals span-4">=</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- NAV INFERIOR -->
+    <nav class="bottom-nav">
+      <button data-nav="home" class="nav-btn active"><span>🏠</span><small>Início</small></button>
+      <button data-nav="calculators" class="nav-btn"><span>🧮</span><small>Calculadoras</small></button>
+      <button data-nav="history" class="nav-btn"><span>🕓</span><small>Histórico</small></button>
+      <button data-nav="favorites" class="nav-btn"><span>⭐</span><small>Favoritos</small></button>
+      <button data-nav="settings" class="nav-btn"><span>⚙️</span><small>Definições</small></button>
+    </nav>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="data/tax-tables.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tax.js"></script>
+  <script src="js/finance.js"></script>
+  <script src="js/calculators.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

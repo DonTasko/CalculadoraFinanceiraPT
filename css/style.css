@@ -1,0 +1,208 @@
+/* ============ RESET & BASE ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size:16px;line-height:1.45;color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:transparent}
+a{color:var(--primary)}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+
+/* ============ THEME ============ */
+:root{
+  --primary:#0f766e;
+  --primary-2:#14b8a6;
+  --bg:#f4f6f8;
+  --surface:#ffffff;
+  --surface-2:#eef1f4;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --danger:#dc2626;
+  --shadow:0 2px 8px rgba(15,23,42,.06);
+}
+body.dark{
+  --primary:#14b8a6;
+  --primary-2:#5eead4;
+  --bg:#0b1220;
+  --surface:#111a2e;
+  --surface-2:#0f172a;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --border:#1e293b;
+  --danger:#f87171;
+  --shadow:0 2px 10px rgba(0,0,0,.4);
+}
+
+/* ============ APP LAYOUT ============ */
+.app{min-height:100vh;display:flex;flex-direction:column;padding-bottom:72px}
+.app-header{
+  position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;
+  padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);
+}
+.page-title{font-size:1.05rem;font-weight:600;flex:1;text-align:center}
+.icon-btn{width:40px;height:40px;border-radius:10px;font-size:1.1rem;display:grid;place-items:center;color:var(--text)}
+.icon-btn:active{background:var(--surface-2)}
+.main{padding:16px;max-width:720px;margin:0 auto;width:100%}
+
+/* ============ ONBOARDING ============ */
+.onboarding{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:24px;background:linear-gradient(160deg,var(--primary),#134e4a);color:#fff}
+.onb-slides{flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+.onb-slide{display:none;animation:fade .4s ease}
+.onb-slide.active{display:block}
+.onb-slide h1{font-size:1.8rem;margin:16px 0 8px;line-height:1.2}
+.onb-slide p{opacity:.9;font-size:1rem}
+.onb-icon{font-size:4rem}
+.onb-dots{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4)}
+.dot.active{background:#fff;width:24px;border-radius:4px}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn-block{width:100%}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 18px;border-radius:12px;font-weight:600;transition:transform .05s, background .2s;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-2)}
+.btn-ghost{background:var(--surface-2);color:var(--text)}
+.btn-sm{padding:8px 12px;font-size:.9rem}
+
+/* ============ HOME ============ */
+.subtitle{color:var(--muted);margin-bottom:12px}
+.section-title{font-size:1rem;font-weight:600;margin:18px 0 10px}
+.search-wrap{margin-bottom:14px}
+.search-wrap input{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);font-size:1rem;
+}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);transition:transform .1s;
+  text-align:left;
+}
+.card:active{transform:scale(.98)}
+.card .emoji{font-size:1.6rem}
+.card .name{font-weight:600}
+.card .cat{font-size:.8rem;color:var(--muted)}
+.card .fav{align-self:flex-end;font-size:1.1rem;opacity:.5}
+.card .fav.on{opacity:1}
+
+.favorites-home{margin-bottom:18px}
+
+/* ============ FORMS ============ */
+.calc h2{font-size:1.25rem;margin-bottom:4px}
+.desc{color:var(--muted);margin-bottom:14px}
+.form{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:.9rem;color:var(--muted)}
+.form input,.form select{
+  padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);font-size:1rem;color:var(--text);
+}
+.form input:focus,.form select:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:var(--primary)}
+
+/* ============ RESULTS ============ */
+.result{display:flex;flex-direction:column;gap:10px;margin-top:16px;animation:fade .3s ease}
+.result-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);
+}
+.result-card.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.result-card.primary span{color:rgba(255,255,255,.85)}
+.result-card span{color:var(--muted);font-size:.9rem}
+.result-card strong{font-size:1.15rem;font-weight:700}
+.details{background:var(--surface);border:1px dashed var(--border);border-radius:14px;padding:14px 16px;color:var(--text);font-size:.95rem}
+.details p{margin:4px 0}
+.steps{margin:8px 0 0 20px;color:var(--muted)}
+
+/* ============ TABLE ============ */
+.table-wrap{overflow:auto;max-height:420px;border:1px solid var(--border);border-radius:12px;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:520px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border)}
+th{background:var(--surface-2);position:sticky;top:0;font-weight:600}
+td:first-child,th:first-child{text-align:center}
+
+/* ============ GENERAL CALCULATOR ============ */
+.calc-display{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;
+  font-size:1.8rem;font-weight:600;text-align:right;min-height:72px;word-break:break-all;
+  margin-bottom:12px;
+}
+.calc-pad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.k{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;
+  font-size:1.2rem;font-weight:600;transition:background .1s;
+}
+.k:active{background:var(--surface-2)}
+.k.op{color:var(--primary)}
+.k.danger{color:var(--danger)}
+.k.equals{background:var(--primary);color:#fff;grid-column:span 4}
+.k.span-4{grid-column:span 4}
+
+/* ============ CHART ============ */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:10px}
+canvas{width:100%;height:auto;display:block}
+
+/* ============ LIST (HISTÓRICO) ============ */
+.list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.list li{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.list .meta{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.list .meta .t{font-weight:600}
+.list .meta .d{color:var(--muted);font-size:.8rem}
+.list .val{font-weight:700;text-align:right;white-space:nowrap}
+.list .del{color:var(--danger);padding:6px 10px;border-radius:8px}
+.empty{text-align:center;color:var(--muted);padding:24px 0}
+
+/* ============ MENU ============ */
+.menu{list-style:none;display:flex;flex-direction:column;gap:2px}
+.menu li>button{
+  width:100%;text-align:left;padding:14px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;
+}
+.menu li+li{margin-top:8px}
+
+/* ============ NAV ============ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;
+  background:var(--surface);border-top:1px solid var(--border);padding:6px 4px;z-index:20;
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;
+  color:var(--muted);border-radius:10px;
+}
+.nav-btn.active{color:var(--primary)}
+.nav-btn span{font-size:1.2rem}
+.nav-btn small{font-size:.7rem}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;left:50%;bottom:90px;transform:translateX(-50%);
+  background:var(--text);color:var(--bg);padding:10px 16px;border-radius:999px;
+  font-size:.9rem;z-index:50;box-shadow:var(--shadow);
+}
+
+/* ============ AD SLOT ============ */
+.ad-slot{height:60px;margin-top:24px;border:1px dashed var(--border);border-radius:12px;display:grid;place-items:center;color:var(--muted);font-size:.8rem}
+
+/* ============ UTIL ============ */
+.row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+
+/* ============ RESPONSIVE ============ */
+@media (min-width:640px){
+  .grid-2{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:900px){
+  .grid-2{grid-template-columns:repeat(4,1fr)}
+}

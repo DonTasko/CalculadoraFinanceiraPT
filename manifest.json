@@ -1,0 +1,10 @@
+{
+  "name": "Calculadora Financeira PT",
+  "short_name": "Calc PT",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f766e",
+  "theme_color": "#0f766e",
+  "orientation": "portrait",
+  "icons": []
+}
